@@ -18,7 +18,18 @@ router.get('/:contactId', async (req, res, next) => {
 })
 
 router.post('/', async (req, res, next) => {
-  res.json({ message: 'template message' })
+  const nameCheck = req.body.name;
+  const emailCheck = req.body.email;
+  const phoneCheck = req.body.phone;
+  if (!nameCheck) {
+    return res.status(400).json({ message: "missing required name field" });
+  } else if (!emailCheck) {
+    return res.status(400).json({ message: "missing required email field" });
+  } else if (!phoneCheck) {
+    return res.status(400).json({ message: "missing required phone field" });
+  }
+  const addNewContact = await contacts.addContact(req.body);
+  res.status(201).json(addNewContact);
 })
 
 router.delete('/:contactId', async (req, res, next) => {

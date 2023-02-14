@@ -39,26 +39,27 @@ const removeContact = async (contactId) => {
   }
 }
 
-const addContact = async (body) => {}
+const addContact = async ({name, email, phone}) => {
+  try {
+    const data = await fs.readFile(contactsPath);
+    const parsedData = JSON.parse(data.toString());
+    const lastId = parsedData[parsedData.length - 1].id;
+    const newContact = {
+      id: `${Number(lastId) + 1}`,
+      name,
+      email,
+      phone
+    };
+    const update = parsedData.push(newContact);
+    console.log(update);
+    fs.writeFile(contactsPath, JSON.stringify(parsedData));
+    return newContact;
+  } catch (e) {
+    console.error(e.message);
+  }
+}
 
 const updateContact = async (contactId, body) => {}
-
-// function addContact(name, email, phone) {
-//   fs.readFile(contactsPath)
-//   .then (data => {
-//       const parsedData = JSON.parse(data.toString());
-//       const lastId = parsedData[parsedData.length - 1].id;
-//       const newContact = {
-//           id: `${Number(lastId) + 1}`,
-//           name,
-//           email,
-//           phone
-//       };
-//       const updateContacts = parsedData.push(newContact);
-//       fs.writeFile(contactsPath, JSON.stringify(parsedData));
-//   })
-//   .catch (error => console.error(error.message));
-// }
 
 
 module.exports = {
