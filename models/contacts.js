@@ -62,7 +62,32 @@ const addContact = async ({name, email, phone}) => {
   }
 }
 
-const updateContact = async (contactId, body) => {}
+const updateContact = async (contactId, {name, email, phone}) => {
+  try {
+    const data = await fs.readFile(contactsPath);
+    const parsedData = JSON.parse(data.toString());
+
+    if (parsedData.some(contact => contact.id === contactId)) {
+      const updatedContacts = parsedData.map(contact => {
+        if (contact.id !== contactId) {
+          return contact;
+        }
+        const updatedContact = {
+          contactId,
+          name,
+          email,
+          phone
+        }
+        // ТУТ НУЖНО ПРОВЕРЯТЬ, КАКИЕ ПОЛЯ ПЕРЕДАЛИ В БОДИ
+        return updatedContact;
+      });
+      fs.writeFile(contactsPath, JSON.stringify(updatedContacts));
+    }
+    return null;
+  } catch (e) {
+    console.error(e.message);
+  }
+}
 
 
 module.exports = {
