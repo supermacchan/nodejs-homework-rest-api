@@ -62,7 +62,7 @@ const addContact = async ({name, email, phone}) => {
   }
 }
 
-const updateContact = async (contactId, {name, email, phone}) => {
+const updateContact = async (contactId, body) => {
   try {
     const data = await fs.readFile(contactsPath);
     const parsedData = JSON.parse(data.toString());
@@ -72,16 +72,11 @@ const updateContact = async (contactId, {name, email, phone}) => {
         if (contact.id !== contactId) {
           return contact;
         }
-        const updatedContact = {
-          contactId,
-          name,
-          email,
-          phone
-        }
-        // ТУТ НУЖНО ПРОВЕРЯТЬ, КАКИЕ ПОЛЯ ПЕРЕДАЛИ В БОДИ
+        const updatedContact = {...contact, ...body}
         return updatedContact;
       });
       fs.writeFile(contactsPath, JSON.stringify(updatedContacts));
+      return updatedContacts[contactId - 1];
     }
     return null;
   } catch (e) {
