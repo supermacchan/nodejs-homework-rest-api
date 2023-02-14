@@ -22,7 +22,11 @@ router.post('/', async (req, res, next) => {
 })
 
 router.delete('/:contactId', async (req, res, next) => {
-  res.json({ message: 'template message' })
+  const tryDeleteContact = await contacts.removeContact(req.params.contactId);
+  if (tryDeleteContact) {
+    return res.status(200).json({ message: "contact deleted" });
+  }
+  res.status(404).json({ message: 'Not found' });
 })
 
 router.put('/:contactId', async (req, res, next) => {
