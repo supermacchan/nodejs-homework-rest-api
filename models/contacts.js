@@ -28,6 +28,7 @@ const removeContact = async (contactId) => {
   try {
     const data = await fs.readFile(contactsPath);
     const parsedData = JSON.parse(data.toString());
+    
     if (parsedData.some(contact => contact.id === contactId)) {
       const filteredContacts = parsedData.filter(contact => contact.id !== contactId);
       fs.writeFile(contactsPath, JSON.stringify(filteredContacts));
@@ -43,6 +44,7 @@ const addContact = async ({name, email, phone}) => {
   try {
     const data = await fs.readFile(contactsPath);
     const parsedData = JSON.parse(data.toString());
+
     const lastId = parsedData[parsedData.length - 1].id;
     const newContact = {
       id: `${Number(lastId) + 1}`,
@@ -50,9 +52,10 @@ const addContact = async ({name, email, phone}) => {
       email,
       phone
     };
+
     const update = parsedData.push(newContact);
-    console.log(update);
     fs.writeFile(contactsPath, JSON.stringify(parsedData));
+
     return newContact;
   } catch (e) {
     console.error(e.message);
