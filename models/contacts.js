@@ -28,7 +28,7 @@ const removeContact = async (contactId) => {
   try {
     const data = await fs.readFile(contactsPath);
     const parsedData = JSON.parse(data.toString());
-    
+
     if (parsedData.some(contact => contact.id === contactId)) {
       const filteredContacts = parsedData.filter(contact => contact.id !== contactId);
       fs.writeFile(contactsPath, JSON.stringify(filteredContacts));
@@ -53,7 +53,7 @@ const addContact = async ({name, email, phone}) => {
       phone
     };
 
-    const update = parsedData.push(newContact);
+    parsedData.push(newContact);
     fs.writeFile(contactsPath, JSON.stringify(parsedData));
 
     return newContact;
