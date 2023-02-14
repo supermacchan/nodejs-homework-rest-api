@@ -4,18 +4,26 @@ const path = require('path');
 const contactsPath = path.resolve('./models/contacts.json');
 
 const listContacts = async () => {
-  const data = await fs.readFile(contactsPath);
-  const result = JSON.parse(data.toString());
-  return result;
-    // .catch (error => console.error(error.message));
+  try {
+    const data = await fs.readFile(contactsPath);
+    const result = JSON.parse(data.toString());
+    return result;
+  } catch (e) {
+    console.error(e.message);
+  }
 }
 
 const getContactById = async (contactId) => {
-  const data = await fs.readFile(contactsPath);
-  const parsedData = JSON.parse(data.toString());
-  const locatedContact = parsedData.filter(contact => contact.id === contactId);
-  return locatedContact;
+  try {
+    const data = await fs.readFile(contactsPath);
+    const parsedData = JSON.parse(data.toString());
+    const locatedContact = parsedData.filter(contact => contact.id === contactId);
+    return locatedContact;
+  } catch (e) {
+    console.error(e.message);
+  }
 }
+  
 
 const removeContact = async (contactId) => {}
 
