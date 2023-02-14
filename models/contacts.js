@@ -10,13 +10,46 @@ const listContacts = async () => {
     // .catch (error => console.error(error.message));
 }
 
-const getContactById = async (contactId) => {}
+const getContactById = async (contactId) => {
+  const data = await fs.readFile(contactsPath);
+  const parsedData = JSON.parse(data.toString());
+  const locatedContact = parsedData.filter(contact => contact.id === contactId);
+  return locatedContact;
+}
 
 const removeContact = async (contactId) => {}
 
 const addContact = async (body) => {}
 
 const updateContact = async (contactId, body) => {}
+
+// function removeContact(contactId) {
+//   fs.readFile(contactsPath)
+//   .then (data => {
+//       const parsedData = JSON.parse(data.toString());
+//       const filteredContacts = parsedData.filter(contact => contact.id !== contactId);
+//       fs.writeFile(contactsPath, JSON.stringify(filteredContacts));
+//   })
+//   .catch (error => console.error(error.message));
+// }
+
+// function addContact(name, email, phone) {
+//   fs.readFile(contactsPath)
+//   .then (data => {
+//       const parsedData = JSON.parse(data.toString());
+//       const lastId = parsedData[parsedData.length - 1].id;
+//       const newContact = {
+//           id: `${Number(lastId) + 1}`,
+//           name,
+//           email,
+//           phone
+//       };
+//       const updateContacts = parsedData.push(newContact);
+//       fs.writeFile(contactsPath, JSON.stringify(parsedData));
+//   })
+//   .catch (error => console.error(error.message));
+// }
+
 
 module.exports = {
   listContacts,

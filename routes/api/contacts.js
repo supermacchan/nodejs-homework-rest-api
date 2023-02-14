@@ -10,9 +10,11 @@ router.get('/', async (req, res, next) => {
 })
 
 router.get('/:contactId', async (req, res, next) => {
-  console.log(req.params.contactId);
-  console.log(req.body);
-  res.json({ message: 'template message' })
+  const requestedContact = await contacts.getContactById(req.params.contactId);
+  if (requestedContact.length > 0) {
+    return res.status(200).json(requestedContact);
+  }
+  res.status(404).json({ message: 'Not found' });
 })
 
 router.post('/', async (req, res, next) => {
