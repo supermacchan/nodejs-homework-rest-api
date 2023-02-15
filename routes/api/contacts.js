@@ -38,10 +38,9 @@ router.delete('/:contactId', async (req, res, next) => {
 })
 
 router.put('/:contactId', async (req, res, next) => {
-  if (!req.body) {
+  if (Object.keys(req.body).length === 0) {
     return res.status(400).json({ message: "missing fields" });
   }
-  // не работает - проверить, почему
 
   const tryUpdateContact = await contacts.updateContact(req.params.contactId, req.body);
   if (!tryUpdateContact) {
