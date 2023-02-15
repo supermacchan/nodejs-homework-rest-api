@@ -88,6 +88,5 @@
     "name": "some name",
     "email": "something@something.com",
     "phone": "111-11-11"
-  },
-  { "id": "16", "name": "CHANGING", "email": "test@test.com", "phone": "11111" }
+  }
 ]
