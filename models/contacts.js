@@ -66,19 +66,15 @@ const updateContact = async (contactId, body) => {
   try {
     const data = await fs.readFile(contactsPath);
     const parsedData = JSON.parse(data.toString());
+    const index = parsedData.findIndex(contact => contact.id === contactId);
 
-    if (parsedData.some(contact => contact.id === contactId)) {
-      const updatedContacts = parsedData.map(contact => {
-        if (contact.id !== contactId) {
-          return contact;
-        }
-        const updatedContact = {...contact, ...body}
-        return updatedContact;
-      });
-      fs.writeFile(contactsPath, JSON.stringify(updatedContacts));
-      return updatedContacts[contactId - 1];
+    if (index === -1) {
+        return null;
     }
-    return null;
+    parsedData[index] = {...parsedData[index], ...body};
+    fs.writeFile(contactsPath, JSON.stringify(parsedData));
+    
+    return parsedData[index];
   } catch (e) {
     console.error(e.message);
   }
