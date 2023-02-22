@@ -1,17 +1,18 @@
 const express = require('express')
 const router = express.Router()
 const contacts = require('../../models/contacts');
-const Joi = require('joi');
 
 const {
   getContacts,
   getContactById,
-  addContact
+  addContact,
+  updateContact
 } = require('../../controllers/contactsController');
 
 router.get('/', getContacts);
 router.post('/', addContact);
 router.get('/:contactId', getContactById);
+router.put('/:contactId', updateContact);
 
 // router.get('/', async (req, res, next) => {
 //   const contactList = await contacts.listContacts();
@@ -51,28 +52,28 @@ router.delete('/:contactId', async (req, res, next) => {
   res.status(404).json({ message: 'Not found' });
 })
 
-router.put('/:contactId', async (req, res, next) => {
-  if (Object.keys(req.body).length === 0) {
-    return res.status(400).json({ message: "missing fields" });
-  }
+// router.put('/:contactId', async (req, res, next) => {
+//   if (Object.keys(req.body).length === 0) {
+//     return res.status(400).json({ message: "missing fields" });
+//   }
 
-  const schema = Joi.object({
-    name: Joi.string().optional(),
-    email: Joi.string().email().optional(),
-    phone: Joi.string().regex(/[0-9]/).optional()
-  });
+//   const schema = Joi.object({
+//     name: Joi.string().optional(),
+//     email: Joi.string().email().optional(),
+//     phone: Joi.string().regex(/[0-9]/).optional()
+//   });
 
-  try {
-      await schema.validateAsync(req.body);
-      const tryUpdateContact = await contacts.updateContact(req.params.contactId, req.body);
-      if (!tryUpdateContact) {
-        return res.status(404).json({ message: 'Not found' }); 
-      }
-      return res.status(200).json(tryUpdateContact);
-  } catch (err) {
-    return res.status(400).json(err.details[0].message);
-  }
-})
+//   try {
+//       await schema.validateAsync(req.body);
+//       const tryUpdateContact = await contacts.updateContact(req.params.contactId, req.body);
+//       if (!tryUpdateContact) {
+//         return res.status(404).json({ message: 'Not found' }); 
+//       }
+//       return res.status(200).json(tryUpdateContact);
+//   } catch (err) {
+//     return res.status(400).json(err.details[0].message);
+//   }
+// })
   
 
 module.exports = router

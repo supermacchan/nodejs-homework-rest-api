@@ -37,8 +37,40 @@ const addContact = async (req, res) => {
     }
 }
 
+const updateContact = async (req, res) => {
+    if (Object.keys(req.body).length === 0) {
+        return res.status(400).json({ message: "missing fields" });
+    }
+    
+    const schema = Joi.object({
+        name: Joi.string().optional(),
+        email: Joi.string().email().optional(),
+        phone: Joi.string().regex(/[0-9]/).optional()
+    });
+
+    const { contactId } = req.params;
+    const { name, email, phone } = req.body;
+
+    try {
+        await schema.validateAsync(req.body);
+        const contact = await Contact.findByIdAndUpdate(
+            contactId,
+            {$set: {name, email, phone}}
+        )
+
+        if (!contact) {
+          return res.status(404).json({ message: 'Not found' }); 
+        }
+        const newContact = await Contact.findById(contactId);
+        return res.status(200).json(newContact);
+    } catch (err) {
+      return res.status(400).json(err.details[0].message);
+    }
+}
+
 module.exports = {
     getContacts,
     getContactById,
-    addContact
+    addContact,
+    updateContact
 }
