@@ -14,6 +14,7 @@ const listContacts = async () => {
   }
 }
 
+// done
 const getContactById = async (contactId) => {
   try {
     const data = await fs.readFile(contactsPath);
