@@ -10,6 +10,15 @@ const getContacts = async (req, res) => {
     }
 }
 
+const getContactById = async (req, res) => {
+    const { contactId } = req.params;
+    const contact = await Contact.findById(contactId);
+    if (!contact) {
+        return res.status(404).json({ message: 'Not found' });
+    }
+    res.status(200).json(contact);
+}
+
 const addContact = async (req, res) => {
     const schema = Joi.object({
         name: Joi.string().required(),
@@ -21,7 +30,6 @@ const addContact = async (req, res) => {
         await schema.validateAsync(req.body);
         const { name, email, phone } = req.body;
         const contact = new Contact({name, email, phone});
-        // id?
         await contact.save();
         res.status(201).json(contact);
     } catch (err) {
@@ -31,5 +39,6 @@ const addContact = async (req, res) => {
 
 module.exports = {
     getContacts,
+    getContactById,
     addContact
 }

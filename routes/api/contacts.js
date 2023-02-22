@@ -5,24 +5,26 @@ const Joi = require('joi');
 
 const {
   getContacts,
+  getContactById,
   addContact
 } = require('../../controllers/contactsController');
 
 router.get('/', getContacts);
 router.post('/', addContact);
+router.get('/:contactId', getContactById);
 
 // router.get('/', async (req, res, next) => {
 //   const contactList = await contacts.listContacts();
 //   res.status(200).json(contactList);
 // })
 
-router.get('/:contactId', async (req, res, next) => {
-  const requestedContact = await contacts.getContactById(req.params.contactId);
-  if (requestedContact.length > 0) {
-    return res.status(200).json(requestedContact);
-  }
-  res.status(404).json({ message: 'Not found' });
-})
+// router.get('/:contactId', async (req, res, next) => {
+//   const requestedContact = await contacts.getContactById(req.params.contactId);
+//   if (requestedContact.length > 0) {
+//     return res.status(200).json(requestedContact);
+//   }
+//   res.status(404).json({ message: 'Not found' });
+// })
 
 // router.post('/', async (req, res, next) => {
 //   const schema = Joi.object({
