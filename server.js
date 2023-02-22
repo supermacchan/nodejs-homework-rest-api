@@ -1,9 +1,10 @@
 const app = require('./app');
 const mongoose = require('mongoose');
-// require('dotenv').config();
 
 const PORT = process.env.PORT || 3000;
-const uriDb = "mongodb+srv://aibaaki9:1L0veGoIT@cluster0.ixvchmc.mongodb.net/?retryWrites=true&w=majority";
+const username = 'aibaaki9';
+const pass = '1L0veGoIT'
+const uriDb = `mongodb+srv://${username}:${pass}@cluster0.ixvchmc.mongodb.net/?retryWrites=true&w=majority`;
 
 const connection = mongoose.connect(uriDb, {
   promiseLibrary: global.Promise,
