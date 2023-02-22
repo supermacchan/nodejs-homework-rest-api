@@ -1,7 +1,7 @@
 const { Contact } = require('../db/contactsModel');
 const Joi = require('joi');
 
-const getContacts = async (req, res) => {
+const getContactsController = async (req, res) => {
     try {
         const contacts = await Contact.find({});
         res.status(200).json({contacts});
@@ -10,7 +10,7 @@ const getContacts = async (req, res) => {
     }
 }
 
-const getContactById = async (req, res) => {
+const getContactByIdController = async (req, res) => {
     const { contactId } = req.params;
     const contact = await Contact.findById(contactId);
     if (!contact) {
@@ -19,7 +19,7 @@ const getContactById = async (req, res) => {
     res.status(200).json(contact);
 }
 
-const addContact = async (req, res) => {
+const addContactController = async (req, res) => {
     const schema = Joi.object({
         name: Joi.string().required(),
         email: Joi.string().email().required(),
@@ -37,7 +37,7 @@ const addContact = async (req, res) => {
     }
 }
 
-const updateContact = async (req, res) => {
+const updateContactController = async (req, res) => {
     if (Object.keys(req.body).length === 0) {
         return res.status(400).json({ message: "missing fields" });
     }
@@ -68,7 +68,7 @@ const updateContact = async (req, res) => {
     }
 }
 
-const removeContact = async (req, res) => {
+const removeContactController = async (req, res) => {
     const { contactId } = req.params;
 
     const contact = await Contact.findByIdAndRemove(contactId)
@@ -79,9 +79,9 @@ const removeContact = async (req, res) => {
 }
 
 module.exports = {
-    getContacts,
-    getContactById,
-    addContact,
-    updateContact,
-    removeContact
+    getContactsController,
+    getContactByIdController,
+    addContactController,
+    updateContactController,
+    removeContactController
 }
