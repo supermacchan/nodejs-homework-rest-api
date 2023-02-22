@@ -1,9 +1,15 @@
-const { Contact } = require('../db/contactsModel');
+const {
+    getContacts,
+    getContactById,
+    addContact,
+    updateContact,
+    removeContact
+} = require('../services/contactsService');
 const Joi = require('joi');
 
 const getContactsController = async (req, res) => {
     try {
-        const contacts = await Contact.find({});
+        const contacts = await getContacts();
         res.status(200).json({contacts});
     } catch (err) {
         console.error(err.message);
@@ -12,7 +18,7 @@ const getContactsController = async (req, res) => {
 
 const getContactByIdController = async (req, res) => {
     const { contactId } = req.params;
-    const contact = await Contact.findById(contactId);
+    const contact = await getContactById(contactId);
     if (!contact) {
         return res.status(404).json({ message: 'Not found' });
     }
@@ -29,8 +35,7 @@ const addContactController = async (req, res) => {
     try {
         await schema.validateAsync(req.body);
         const { name, email, phone } = req.body;
-        const contact = new Contact({name, email, phone});
-        await contact.save();
+        const contact = await addContact({name, email, phone});
         res.status(201).json(contact);
     } catch (err) {
         return res.status(400).json(err.details[0].message);
@@ -53,16 +58,16 @@ const updateContactController = async (req, res) => {
 
     try {
         await schema.validateAsync(req.body);
-        const contact = await Contact.findByIdAndUpdate(
+        const contact = await updateContact(
             contactId,
-            {$set: {name, email, phone}}
+            {name, email, phone}
         )
 
         if (!contact) {
           return res.status(404).json({ message: 'Not found' }); 
         }
-        const newContact = await Contact.findById(contactId);
-        return res.status(200).json(newContact);
+        return res.status(200).json(contact);
+
     } catch (err) {
       return res.status(400).json(err.details[0].message);
     }
@@ -71,7 +76,7 @@ const updateContactController = async (req, res) => {
 const removeContactController = async (req, res) => {
     const { contactId } = req.params;
 
-    const contact = await Contact.findByIdAndRemove(contactId)
+    const contact = await removeContact(contactId);
     if (!contact) {
         return res.status(404).json({ message: 'Not found' });
     }
