@@ -2,9 +2,10 @@ const app = require('./app');
 const mongoose = require('mongoose');
 
 const PORT = process.env.PORT || 3000;
-const username = 'aibaaki9';
-const pass = '1L0veGoIT'
-const uriDb = `mongodb+srv://${username}:${pass}@cluster0.ixvchmc.mongodb.net/?retryWrites=true&w=majority`;
+const username = encodeURIComponent('aibaaki9');
+const pass = encodeURIComponent('1L0veGoIT');
+const cluster = "cluster0.ixvchmc.mongodb.net";
+const uriDb = `mongodb+srv://${username}:${pass}@${cluster}/?retryWrites=true&w=majority`;
 
 const connection = mongoose.connect(uriDb, {
   promiseLibrary: global.Promise,
