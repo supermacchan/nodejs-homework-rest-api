@@ -34,10 +34,24 @@ const removeContact = async (contactId) => {
     return contact;
 };
 
+const updateStatusContact = async (contactId, {favorite}) => {
+    const contact = await Contact.findByIdAndUpdate(
+        contactId,
+        {$set: {favorite}}
+    )
+
+    if (!contact) {
+      return null; 
+    }
+    const newContact = await Contact.findById(contactId);
+    return newContact;
+};
+
 module.exports = {
     getContacts,
     getContactById,
     addContact,
     updateContact,
-    removeContact
+    removeContact,
+    updateStatusContact
 }
