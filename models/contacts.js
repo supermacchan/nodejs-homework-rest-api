@@ -3,6 +3,7 @@ const path = require('path');
 
 const contactsPath = path.resolve('./models/contacts.json');
 
+// done
 const listContacts = async () => {
   try {
     const data = await fs.readFile(contactsPath);
@@ -40,6 +41,7 @@ const removeContact = async (contactId) => {
   }
 }
 
+// done
 const addContact = async ({name, email, phone}) => {
   try {
     const data = await fs.readFile(contactsPath);

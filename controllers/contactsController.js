@@ -21,6 +21,7 @@ const addContact = async (req, res) => {
         await schema.validateAsync(req.body);
         const { name, email, phone } = req.body;
         const contact = new Contact({name, email, phone});
+        // id?
         await contact.save();
         res.status(201).json(contact);
     } catch (err) {
