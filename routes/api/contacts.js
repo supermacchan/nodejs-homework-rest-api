@@ -3,10 +3,16 @@ const router = express.Router()
 const contacts = require('../../models/contacts');
 const Joi = require('joi');
 
-router.get('/', async (req, res, next) => {
-  const contactList = await contacts.listContacts();
-  res.status(200).json(contactList);
-})
+const {
+  getContacts
+} = require('../../controllers/contactsController');
+
+router.get('/', getContacts);
+
+// router.get('/', async (req, res, next) => {
+//   const contactList = await contacts.listContacts();
+//   res.status(200).json(contactList);
+// })
 
 router.get('/:contactId', async (req, res, next) => {
   const requestedContact = await contacts.getContactById(req.params.contactId);
