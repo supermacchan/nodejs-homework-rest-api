@@ -68,9 +68,20 @@ const updateContact = async (req, res) => {
     }
 }
 
+const removeContact = async (req, res) => {
+    const { contactId } = req.params;
+
+    const contact = await Contact.findByIdAndRemove(contactId)
+    if (!contact) {
+        return res.status(404).json({ message: 'Not found' });
+    }
+    res.status(200).json({ message: "contact deleted" });
+}
+
 module.exports = {
     getContacts,
     getContactById,
     addContact,
-    updateContact
+    updateContact,
+    removeContact
 }

@@ -26,6 +26,7 @@ const getContactById = async (contactId) => {
   }
 }
 
+// done
 const removeContact = async (contactId) => {
   try {
     const data = await fs.readFile(contactsPath);
