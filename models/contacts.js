@@ -65,6 +65,7 @@ const addContact = async ({name, email, phone}) => {
   }
 }
 
+// done
 const updateContact = async (contactId, body) => {
   try {
     const data = await fs.readFile(contactsPath);
