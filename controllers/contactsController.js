@@ -2,8 +2,12 @@ const { Contact } = require('../db/contactsModel');
 const Joi = require('joi');
 
 const getContacts = async (req, res) => {
-    const contacts = await Contact.find({});
-    res.status(200).json({contacts});
+    try {
+        const contacts = await Contact.find({});
+        res.status(200).json({contacts});
+    } catch (err) {
+        console.error(err.message);
+    }
 }
 
 const addContact = async (req, res) => {
@@ -12,7 +16,7 @@ const addContact = async (req, res) => {
         email: Joi.string().email().required(),
         phone: Joi.string().regex(/[0-9]/).required()
     });
-    
+
     try {
         await schema.validateAsync(req.body);
         const { name, email, phone } = req.body;
