@@ -4,10 +4,12 @@ const contacts = require('../../models/contacts');
 const Joi = require('joi');
 
 const {
-  getContacts
+  getContacts,
+  addContact
 } = require('../../controllers/contactsController');
 
 router.get('/', getContacts);
+router.post('/', addContact);
 
 // router.get('/', async (req, res, next) => {
 //   const contactList = await contacts.listContacts();
@@ -22,22 +24,22 @@ router.get('/:contactId', async (req, res, next) => {
   res.status(404).json({ message: 'Not found' });
 })
 
-router.post('/', async (req, res, next) => {
-  const schema = Joi.object({
-    name: Joi.string().required(),
-    email: Joi.string().email().required(),
-    phone: Joi.string().regex(/[0-9]/).required()
-  });
+// router.post('/', async (req, res, next) => {
+//   const schema = Joi.object({
+//     name: Joi.string().required(),
+//     email: Joi.string().email().required(),
+//     phone: Joi.string().regex(/[0-9]/).required()
+//   });
 
-  try {
-      await schema.validateAsync(req.body);
-      const addNewContact = await contacts.addContact(req.body);
-      return res.status(201).json(addNewContact);
-  }
-  catch (err) {
-    return res.status(400).json(err.details[0].message);
-  }
-})
+//   try {
+//       await schema.validateAsync(req.body);
+//       const addNewContact = await contacts.addContact(req.body);
+//       return res.status(201).json(addNewContact);
+//   }
+//   catch (err) {
+//     return res.status(400).json(err.details[0].message);
+//   }
+// })
 
 router.delete('/:contactId', async (req, res, next) => {
   const tryDeleteContact = await contacts.removeContact(req.params.contactId);
