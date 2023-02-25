@@ -6,7 +6,11 @@ const {
 const registrationController = async (req, res) => {
     const { email, password } = req.body;
     try {
-        await register(email, password);
+        const user = await register(email, password);
+        if (!user) {
+            return res.status(409).json("Email in use");
+        }
+
         res.status(201).json({
             user: {
                 email,

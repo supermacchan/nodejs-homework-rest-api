@@ -7,11 +7,17 @@ const { User } = require('../db/usersModel');
 
 
 const register = async (email, password) => {
+    const userCheck = await User.findOne({email});
+    if (userCheck) {
+        return null;
+    }
+
     const user = new User({
         email,
         password
     });
     await user.save();
+    return user;
 }
 
 const login = async (email, password) => {
@@ -20,6 +26,7 @@ const login = async (email, password) => {
         return null;
     }
 
+    // тут что-то идет не так, пароль пропускает любой сейчас
     const passwordCheck = bcrypt.compare(password, user.password);
     if (!passwordCheck) {
         return null;
