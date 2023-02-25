@@ -21,12 +21,9 @@ const getContactByIdController = async (req, res) => {
     const { contactId } = req.params;
     try {
         const contact = await getContactById(contactId);
-        if (!contact) {
-            return res.status(404).json({ message: 'Not found' });
-        }
         res.status(200).json(contact);
     } catch (err) {
-        res.status(400).json(err.message);
+        res.status(err.status).json(err.message);
     }
 }
 
@@ -49,7 +46,7 @@ const addContactController = async (req, res) => {
 
 const updateContactController = async (req, res) => {
     if (Object.keys(req.body).length === 0) {
-        return res.status(400).json({ message: "missing fields" });
+        return res.status(400).json("missing fields");
     }
     
     const schema = Joi.object({
@@ -67,14 +64,10 @@ const updateContactController = async (req, res) => {
             contactId,
             {name, email, phone}
         )
-
-        if (!contact) {
-          return res.status(404).json({ message: 'Not found' }); 
-        }
         return res.status(200).json(contact);
 
     } catch (err) {
-      return res.status(400).json(err.message);
+      return res.status(err.status).json(err.message);
     }
 }
 
@@ -82,19 +75,16 @@ const removeContactController = async (req, res) => {
     const { contactId } = req.params;
 
     try {
-        const contact = await removeContact(contactId);
-        if (!contact) {
-            return res.status(404).json({ message: 'Not found' });
-        }
-        res.status(200).json({ message: "contact deleted" });
+        await removeContact(contactId);
+        res.status(200).json("contact deleted");
     } catch (err) {
-        res.status(400).json(err.message);
+        res.status(err.status).json(err.message);
     }  
 }
 
 const updateFavoriteController = async (req, res) => {
     if (Object.keys(req.body).length === 0) {
-        return res.status(400).json({ message: "missing field favorite" });
+        return res.status(400).json("missing field favorite");
     }
 
     const schema = Joi.object({
@@ -107,12 +97,9 @@ const updateFavoriteController = async (req, res) => {
     try {
         await schema.validateAsync(req.body);
         const contact = await updateStatusContact(contactId, {favorite});
-        if (!contact) {
-            return res.status(404).json({ message: 'Not found' });
-        }
         res.status(200).json(contact);
     } catch (err) {
-        res.status(400).json(err.message);
+        res.status(err.status).json(err.message);
     }  
 }
 

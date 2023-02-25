@@ -1,4 +1,7 @@
 const { Contact } = require('../db/contactsModel');
+const { 
+    NotFoundError
+ } = require('../helpers/errors');
 
 const getContacts = async () => {
     const contacts = await Contact.find({});
@@ -7,6 +10,9 @@ const getContacts = async () => {
 
 const getContactById = async (contactId) => {
     const contact = await Contact.findById(contactId);
+    if (!contact) {
+        throw new NotFoundError('Not found');
+    }
     return contact;
 };
 
@@ -23,7 +29,7 @@ const updateContact = async (contactId, {name, email, phone}) => {
     )
 
     if (!contact) {
-      return null; 
+        throw new NotFoundError('Not found');
     }
     const newContact = await Contact.findById(contactId);
     return newContact;
@@ -31,6 +37,9 @@ const updateContact = async (contactId, {name, email, phone}) => {
 
 const removeContact = async (contactId) => {
     const contact = await Contact.findByIdAndRemove(contactId);
+    if (!contact) {
+        throw new NotFoundError('Not found');
+    }
     return contact;
 };
 
@@ -41,7 +50,7 @@ const updateStatusContact = async (contactId, {favorite}) => {
     )
 
     if (!contact) {
-      return null; 
+        throw new NotFoundError('Not found');
     }
     const newContact = await Contact.findById(contactId);
     return newContact;
