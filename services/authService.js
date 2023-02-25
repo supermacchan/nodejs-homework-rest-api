@@ -3,13 +3,17 @@ const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
 const { User } = require('../db/usersModel');
+const { 
+    RegistrationConflictError,
+    AuthorizationError
+ } = require('../helpers/errors');
 
 
 
 const register = async (email, password) => {
     const userCheck = await User.findOne({email});
     if (userCheck) {
-        return null;
+        throw new RegistrationConflictError("Email in use");
     }
 
     const user = new User({
@@ -17,19 +21,18 @@ const register = async (email, password) => {
         password
     });
     await user.save();
-    return user;
 }
 
 const login = async (email, password) => {
     const user = await User.findOne({email});
     if (!user) {
-        return null;
+        throw new AuthorizationError("Email or password is wrong");
     }
 
     // тут что-то идет не так, пароль пропускает любой сейчас
     const passwordCheck = bcrypt.compare(password, user.password);
     if (!passwordCheck) {
-        return null;
+        throw new AuthorizationError("Email or password is wrong");
     }
 
     const token = jwt.sign({

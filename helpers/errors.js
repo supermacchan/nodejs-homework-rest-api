@@ -1,32 +1,32 @@
 class ContactListAppError extends Error {
     constructor(message) {
         super(message);
-        this.status = 400;
+        this.status = 500;
     }
 }
 
-class ValidationError extends Error {
+class ValidationError extends ContactListAppError {
     constructor(message) {
         super(message);
         this.status = 400;
     }
 }
 
-class NotFoundError extends Error {
+class NotFoundError extends ContactListAppError {
     constructor(message) {
         super(message);
         this.status = 404;
     }
 }
 
-class RegistrationConflictError extends Error {
+class RegistrationConflictError extends ContactListAppError {
     constructor(message) {
         super(message);
         this.status = 409;
     }
 }
 
-class AuthorizationError extends Error {
+class AuthorizationError extends ContactListAppError {
     constructor(message) {
         super(message);
         this.status = 401;
