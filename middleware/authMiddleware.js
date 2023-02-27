@@ -5,6 +5,7 @@ const { AuthorizationError } = require('../helpers/errors');
 
 
 const authMiddleware = async (req, res, next) => {
+    // eslint-disable-next-line dot-notation
     const [tokenType, token] = req.headers["authorization"].split(" ");
     console.log(tokenType);
 
