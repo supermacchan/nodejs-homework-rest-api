@@ -1,3 +1,4 @@
+const { User } = require('../db/usersModel');
 const {
     register,
     login
@@ -21,15 +22,17 @@ const registrationController = async (req, res) => {
 const loginController = async (req, res) => {
     const { email, password } = req.body;
     try {
-        const token = await login(email, password);
-        // if (!token) {
-        //     return res.status(401).json("Email or password is wrong");
-        // }
+        const { token, userId } = await login(email, password);
+        const user = await User.findOneAndUpdate(
+            userId,
+            { $set: { token } }
+        )
+
         res.status(200).json({
             token,
             user: {
                 email,
-                subscription: "starter"
+                subscription: user.subscription,
             }
         })
     } catch (err) {

@@ -38,9 +38,8 @@ const login = async (email, password) => {
     const token = jwt.sign({
         _id: user._id
     }, process.env.JWT_SECRET);
-    // СРОК ВАЛИДНОСТИ ТОКЕНА?
 
-    return token;
+    return { token, userId: user._id };
 }
 
 module.exports = {
