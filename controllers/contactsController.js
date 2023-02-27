@@ -11,7 +11,15 @@ const Joi = require('joi');
 const getContactsController = async (req, res) => {
     try {
         const { _id: userId } = req.user;
-        const contacts = await getContacts(userId);
+
+        let {
+            page = 0,
+            limit = 5
+        } = req.query;
+        limit = limit > 20 ? 20 : limit;
+        const skip = (page - 1) * limit;
+
+        const contacts = await getContacts(userId, {skip, limit});
         res.status(200).json({contacts});
     } catch (err) {
         res.status(400).json(err.message);
