@@ -10,7 +10,8 @@ const Joi = require('joi');
 
 const getContactsController = async (req, res) => {
     try {
-        const contacts = await getContacts();
+        const { _id } = req.user;
+        const contacts = await getContacts(_id);
         res.status(200).json({contacts});
     } catch (err) {
         res.status(400).json(err.message);
@@ -35,9 +36,10 @@ const addContactController = async (req, res) => {
     });
 
     try {
+        const { _id } = req.user;
         await schema.validateAsync(req.body);
         const { name, email, phone } = req.body;
-        const contact = await addContact({name, email, phone});
+        const contact = await addContact({name, email, phone}, _id);
         res.status(201).json(contact);
     } catch (err) {
         return res.status(400).json(err.details[0].message);

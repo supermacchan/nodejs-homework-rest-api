@@ -19,10 +19,6 @@ const usersSchema = new mongoose.Schema({
     token: {
         type: String,
         default: null,
-    },
-    owner: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'user',
     }
 })
 

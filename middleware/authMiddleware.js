@@ -5,7 +5,8 @@ const { AuthorizationError } = require('../helpers/errors');
 
 
 const authMiddleware = async (req, res, next) => {
-    const [tokenType, token] = req.headers["authorization"];
+    const [tokenType, token] = req.headers["authorization"].split(" ");
+    console.log(tokenType);
 
     if (!token) {
         next(new AuthorizationError("Not authorized"));

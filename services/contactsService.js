@@ -3,8 +3,8 @@ const {
     NotFoundError
  } = require('../helpers/errors');
 
-const getContacts = async () => {
-    const contacts = await Contact.find({});
+const getContacts = async (owner) => {
+    const contacts = await Contact.find({owner});
     return contacts;
 };
 
@@ -16,8 +16,8 @@ const getContactById = async (contactId) => {
     return contact;
 };
 
-const addContact = async ({name, email, phone}) => {
-    const contact = new Contact({name, email, phone});
+const addContact = async ({name, email, phone}, owner) => {
+    const contact = new Contact({name, email, phone, owner});
     await contact.save();
     return contact;
 };
