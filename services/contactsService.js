@@ -27,7 +27,10 @@ const getContacts = async (owner, {skip, limit, favorite}) => {
 };
 
 const getContactById = async (contactId, owner) => {
-    const contact = await Contact.findOne({_id: contactId, owner});
+    const contact = await 
+        Contact
+            .findOne({_id: contactId, owner})
+            .select({__v: 0});
     if (!contact) {
         throw new NotFoundError('Not found');
     }
@@ -49,7 +52,10 @@ const updateContact = async (contactId, {name, email, phone}, owner) => {
     if (!contact) {
         throw new NotFoundError('Not found');
     }
-    const newContact = await Contact.findOne({_id: contactId, owner});
+    const newContact = await 
+        Contact
+            .findOne({_id: contactId, owner})
+            .select({__v: 0});
     return newContact;
 };
 
@@ -70,7 +76,7 @@ const updateStatusContact = async (contactId, {favorite}, owner) => {
     if (!contact) {
         throw new NotFoundError('Not found');
     }
-    const newContact = await Contact.findById(contactId);
+    const newContact = await Contact.findById(contactId).select({__v: 0});
     return newContact;
 };
 
