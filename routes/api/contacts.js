@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
 
+const { authMiddleware } = require('../../middleware/authMiddleware');
 const {
   getContactsController,
   getContactByIdController,
@@ -9,6 +10,8 @@ const {
   removeContactController,
   updateFavoriteController
 } = require('../../controllers/contactsController');
+
+router.use(authMiddleware);
 
 router.get('/', getContactsController);
 router.post('/', addContactController);
