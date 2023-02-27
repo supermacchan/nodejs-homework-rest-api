@@ -3,10 +3,23 @@ const {
     NotFoundError
  } = require('../helpers/errors');
 
-const getContacts = async (owner, {skip, limit}) => {
+const getContacts = async (owner, {skip, limit, favorite}) => {
+    if (!favorite) {
+        const contacts = await 
+            Contact
+                .find({owner})
+                .select({__v: 0})
+                .skip(skip)
+                .limit(limit);
+        return contacts;
+    }
+
     const contacts = await 
         Contact
-            .find({owner})
+            .find({
+                owner, 
+                favorite
+            })
             .select({__v: 0})
             .skip(skip)
             .limit(limit);

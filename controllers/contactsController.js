@@ -13,13 +13,14 @@ const getContactsController = async (req, res) => {
         const { _id: userId } = req.user;
 
         let {
-            page = 0,
-            limit = 5
+            page = 1,
+            limit = 5,
+            favorite = null
         } = req.query;
         limit = limit > 20 ? 20 : limit;
         const skip = (page - 1) * limit;
-
-        const contacts = await getContacts(userId, {skip, limit});
+        
+        const contacts = await getContacts(userId, {skip, limit, favorite});
         res.status(200).json({contacts});
     } catch (err) {
         res.status(400).json(err.message);
