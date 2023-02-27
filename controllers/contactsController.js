@@ -10,8 +10,8 @@ const Joi = require('joi');
 
 const getContactsController = async (req, res) => {
     try {
-        const { _id } = req.user;
-        const contacts = await getContacts(_id);
+        const { _id: userId } = req.user;
+        const contacts = await getContacts(userId);
         res.status(200).json({contacts});
     } catch (err) {
         res.status(400).json(err.message);
@@ -20,8 +20,9 @@ const getContactsController = async (req, res) => {
 
 const getContactByIdController = async (req, res) => {
     const { contactId } = req.params;
+    const { _id: userId } = req.user;
     try {
-        const contact = await getContactById(contactId);
+        const contact = await getContactById(contactId, userId);
         res.status(200).json(contact);
     } catch (err) {
         res.status(err.status).json(err.message);
@@ -36,10 +37,10 @@ const addContactController = async (req, res) => {
     });
 
     try {
-        const { _id } = req.user;
+        const { _id: userId } = req.user;
         await schema.validateAsync(req.body);
         const { name, email, phone } = req.body;
-        const contact = await addContact({name, email, phone}, _id);
+        const contact = await addContact({name, email, phone}, userId);
         res.status(201).json(contact);
     } catch (err) {
         return res.status(400).json(err.details[0].message);
@@ -58,13 +59,15 @@ const updateContactController = async (req, res) => {
     });
 
     const { contactId } = req.params;
+    const { _id: userId } = req.user;
     const { name, email, phone } = req.body;
 
     try {
         await schema.validateAsync(req.body);
         const contact = await updateContact(
             contactId,
-            {name, email, phone}
+            {name, email, phone},
+            userId
         )
         return res.status(200).json(contact);
 
@@ -75,9 +78,10 @@ const updateContactController = async (req, res) => {
 
 const removeContactController = async (req, res) => {
     const { contactId } = req.params;
+    const { _id: userId } = req.user;
 
     try {
-        await removeContact(contactId);
+        await removeContact(contactId, userId);
         res.status(200).json("contact deleted");
     } catch (err) {
         res.status(err.status).json(err.message);
@@ -94,11 +98,12 @@ const updateFavoriteController = async (req, res) => {
     });
 
     const { contactId } = req.params;
+    const { _id: userId } = req.user;
     const { favorite } = req.body;
 
     try {
         await schema.validateAsync(req.body);
-        const contact = await updateStatusContact(contactId, {favorite});
+        const contact = await updateStatusContact(contactId, {favorite}, userId);
         res.status(200).json(contact);
     } catch (err) {
         res.status(err.status).json(err.message);

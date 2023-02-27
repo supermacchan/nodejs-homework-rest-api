@@ -8,8 +8,8 @@ const getContacts = async (owner) => {
     return contacts;
 };
 
-const getContactById = async (contactId) => {
-    const contact = await Contact.findById(contactId);
+const getContactById = async (contactId, owner) => {
+    const contact = await Contact.findOne({_id: contactId, owner});
     if (!contact) {
         throw new NotFoundError('Not found');
     }
@@ -22,30 +22,30 @@ const addContact = async ({name, email, phone}, owner) => {
     return contact;
 };
 
-const updateContact = async (contactId, {name, email, phone}) => {
-    const contact = await Contact.findByIdAndUpdate(
-        contactId,
+const updateContact = async (contactId, {name, email, phone}, owner) => {
+    const contact = await Contact.findOneAndUpdate(
+        {_id: contactId, owner},
         {$set: {name, email, phone}}
     )
 
     if (!contact) {
         throw new NotFoundError('Not found');
     }
-    const newContact = await Contact.findById(contactId);
+    const newContact = await Contact.findOne({_id: contactId, owner});
     return newContact;
 };
 
-const removeContact = async (contactId) => {
-    const contact = await Contact.findByIdAndRemove(contactId);
+const removeContact = async (contactId, owner) => {
+    const contact = await Contact.findOneAndRemove({_id: contactId, owner});
     if (!contact) {
         throw new NotFoundError('Not found');
     }
     return contact;
 };
 
-const updateStatusContact = async (contactId, {favorite}) => {
-    const contact = await Contact.findByIdAndUpdate(
-        contactId,
+const updateStatusContact = async (contactId, {favorite}, owner) => {
+    const contact = await Contact.findOneAndUpdate(
+        {_id: contactId, owner},
         {$set: {favorite}}
     )
 
