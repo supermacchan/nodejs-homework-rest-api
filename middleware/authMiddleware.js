@@ -7,17 +7,17 @@ const { User } = require('../db/usersModel');
 
 const authMiddleware = async (req, res, next) => {
     // eslint-disable-next-line dot-notation
-    const [tokenType, token] = req.headers["authorization"].split(" ");
-    console.log(tokenType);
+    const [, token] = req.headers["authorization"].split(" ");
 
     if (!token) {
-        console.log("no token");
         next(new AuthorizationError("Not authorized"));
     }
 
     try {
         const user = jwt.decode(token, process.env.JWT_SECRET);
         const checkedUser = await User.findById(user._id);
+        console.log(token);
+        console.log(checkedUser.token);
 
         if (!checkedUser) {
             next(new AuthorizationError("Not authorized"));

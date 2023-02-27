@@ -42,7 +42,18 @@ const login = async (email, password) => {
     return { token, userId: user._id };
 }
 
+const checkCurrentUser = async (userId) => {
+    const user = await User.findById(userId);
+
+    if (!user) {
+        throw new AuthorizationError("Not Authorized");
+    }
+
+    return user;
+}
+
 module.exports = {
     register,
-    login
+    login,
+    checkCurrentUser
 }
