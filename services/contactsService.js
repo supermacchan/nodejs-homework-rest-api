@@ -38,17 +38,18 @@ const addContact = async ({name, email, phone}, owner) => {
 const updateContact = async (contactId, {name, email, phone}, owner) => {
     const contact = await Contact.findOneAndUpdate(
         {_id: contactId, owner},
-        {$set: {name, email, phone}}
-    )
+        {$set: {name, email, phone}},
+        {
+            returnDocument: 'after',
+            returnNewDocument: true
+        })
+        .select({__v: 0});
 
     if (!contact) {
         throw new NotFoundError('Not found');
     }
-    const newContact = await 
-        Contact
-            .findOne({_id: contactId, owner})
-            .select({__v: 0});
-    return newContact;
+
+    return contact;
 };
 
 const removeContact = async (contactId, owner) => {
