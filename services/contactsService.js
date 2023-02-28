@@ -4,22 +4,14 @@ const {
  } = require('../helpers/errors');
 
 const getContacts = async (owner, {skip, limit, favorite}) => {
-    if (!favorite) {
-        const contacts = await 
-            Contact
-                .find({owner})
-                .select({__v: 0})
-                .skip(skip)
-                .limit(limit);
-        return contacts;
+    let query = {owner};
+    if (favorite) {
+        query =  { owner, favorite };
     }
 
     const contacts = await 
         Contact
-            .find({
-                owner, 
-                favorite
-            })
+            .find(query)
             .select({__v: 0})
             .skip(skip)
             .limit(limit);
