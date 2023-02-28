@@ -37,6 +37,16 @@ const loginController = async (req, res) => {
     }
 }
 
+const logoutController = async (req, res) => {
+    try {
+        const { _id: userId } = req.user;
+        await logout(userId);
+        res.status(204).json("No content");
+    } catch (err) {
+        res.status(err.status).json(err.message);
+    }
+}
+
 const checkCurrentUserController = async (req, res) => {
     try {
         const { _id: userId } = req.user;
@@ -52,19 +62,9 @@ const checkCurrentUserController = async (req, res) => {
     }
 }
 
-const logoutController = async (req, res) => {
-    try {
-        const { _id: userId } = req.user;
-        await logout(userId);
-        res.status(204).json("No content");
-    } catch (err) {
-        res.status(err.status).json(err.message);
-    }
-}
-
 module.exports = {
     registrationController,
     loginController,
+    logoutController,
     checkCurrentUserController,
-    logoutController
 }
