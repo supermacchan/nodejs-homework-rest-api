@@ -4,7 +4,8 @@ const router = express.Router()
 const { authMiddleware } = require('../../middleware/authMiddleware');
 const {
   addContactMiddleware,
-  updateContactMiddleware
+  updateContactMiddleware,
+  updateFavoriteMiddleware
 } = require('../../middleware/contactMiddleware');
 
 const {
@@ -23,6 +24,6 @@ router.post('/', addContactMiddleware, addContactController);
 router.get('/:contactId', getContactByIdController);
 router.put('/:contactId', updateContactMiddleware, updateContactController);
 router.delete('/:contactId', removeContactController);
-router.patch('/:contactId/favorite', updateFavoriteController);
+router.patch('/:contactId/favorite', updateFavoriteMiddleware, updateFavoriteController);
 
 module.exports = router

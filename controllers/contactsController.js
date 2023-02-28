@@ -6,7 +6,7 @@ const {
     removeContact,
     updateStatusContact
 } = require('../services/contactsService');
-const Joi = require('joi');
+// const Joi = require('joi');
 
 const getContactsController = async (req, res) => {
     try {
@@ -89,16 +89,16 @@ const updateFavoriteController = async (req, res) => {
         return res.status(400).json("missing field favorite");
     }
 
-    const schema = Joi.object({
-        favorite: Joi.boolean().required()
-    });
+    // const schema = Joi.object({
+    //     favorite: Joi.boolean().required()
+    // });
 
     const { contactId } = req.params;
     const { _id: userId } = req.user;
     const { favorite } = req.body;
 
     try {
-        await schema.validateAsync(req.body);
+        // await schema.validateAsync(req.body);
         const contact = await updateStatusContact(contactId, {favorite}, userId);
         res.status(200).json(contact);
     } catch (err) {

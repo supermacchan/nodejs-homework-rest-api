@@ -31,7 +31,21 @@ const updateContactMiddleware = async (req, res, next) => {
     }
 }
 
+const updateFavoriteMiddleware = async (req, res, next) => {
+    const schema = Joi.object({
+        favorite: Joi.boolean().required()
+    });
+
+    try {
+        await schema.validateAsync(req.body);
+        next();
+    } catch (err) {
+        next(new ValidationError(err.details[0].message));
+    }
+}
+
 module.exports = {
     addContactMiddleware,
-    updateContactMiddleware
+    updateContactMiddleware,
+    updateFavoriteMiddleware
 }
