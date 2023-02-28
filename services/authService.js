@@ -43,8 +43,7 @@ const login = async (email, password) => {
         { $set: { token } }
     )
 
-    const result = { token, updatedUser };
-    return result;
+    return { token, updatedUser };
 }
 
 const checkCurrentUser = async (userId) => {
@@ -57,8 +56,22 @@ const checkCurrentUser = async (userId) => {
     return user;
 }
 
+const logout = async (userId) => {
+    const user = await User.findByIdAndUpdate(
+        userId,
+        { $set: { token: null } }
+    )
+
+    if (!user) {
+        throw new AuthorizationError("Not Authorized");
+    }
+
+    return user;
+}
+
 module.exports = {
     register,
     login,
-    checkCurrentUser
+    checkCurrentUser,
+    logout
 }
