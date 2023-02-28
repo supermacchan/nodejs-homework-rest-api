@@ -3,7 +3,8 @@ const router = express.Router()
 
 const { authMiddleware } = require('../../middleware/authMiddleware');
 const {
-  addContactMiddleware
+  addContactMiddleware,
+  updateContactMiddleware
 } = require('../../middleware/contactMiddleware');
 
 const {
@@ -20,7 +21,7 @@ router.use(authMiddleware);
 router.get('/', getContactsController);
 router.post('/', addContactMiddleware, addContactController);
 router.get('/:contactId', getContactByIdController);
-router.put('/:contactId', updateContactController);
+router.put('/:contactId', updateContactMiddleware, updateContactController);
 router.delete('/:contactId', removeContactController);
 router.patch('/:contactId/favorite', updateFavoriteController);
 

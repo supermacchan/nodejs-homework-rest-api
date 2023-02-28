@@ -39,9 +39,10 @@ const getContactByIdController = async (req, res) => {
 }
 
 const addContactController = async (req, res) => {
+    const { _id: userId } = req.user;
+    const { name, email, phone } = req.body;
+
     try {
-        const { _id: userId } = req.user;
-        const { name, email, phone } = req.body;
         const contact = await addContact({name, email, phone}, userId);
         res.status(201).json(contact);
     } catch (err) {
@@ -53,19 +54,12 @@ const updateContactController = async (req, res) => {
     if (Object.keys(req.body).length === 0) {
         return res.status(400).json("missing fields");
     }
-    
-    const schema = Joi.object({
-        name: Joi.string().optional(),
-        email: Joi.string().email().optional(),
-        phone: Joi.string().regex(/[0-9]/).optional()
-    });
 
     const { contactId } = req.params;
     const { _id: userId } = req.user;
     const { name, email, phone } = req.body;
 
     try {
-        await schema.validateAsync(req.body);
         const contact = await updateContact(
             contactId,
             {name, email, phone},
