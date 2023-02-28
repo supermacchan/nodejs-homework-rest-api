@@ -39,20 +39,13 @@ const getContactByIdController = async (req, res) => {
 }
 
 const addContactController = async (req, res) => {
-    const schema = Joi.object({
-        name: Joi.string().required(),
-        email: Joi.string().email().required(),
-        phone: Joi.string().regex(/[0-9]/).required()
-    });
-
     try {
         const { _id: userId } = req.user;
-        await schema.validateAsync(req.body);
         const { name, email, phone } = req.body;
         const contact = await addContact({name, email, phone}, userId);
         res.status(201).json(contact);
     } catch (err) {
-        return res.status(400).json(err.details[0].message);
+        res.status(err.status).json(err.message)
     }
 }
 
