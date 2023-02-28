@@ -1,4 +1,3 @@
-const { User } = require('../db/usersModel');
 const {
     register,
     login,
@@ -23,18 +22,13 @@ const registrationController = async (req, res) => {
 const loginController = async (req, res) => {
     const { email, password } = req.body;
     try {
-        const { token, userId } = await login(email, password);
-        // ВЫНЕСТИ В СЕРВИС
-        const user = await User.findOneAndUpdate(
-            userId,
-            { $set: { token } }
-        )
+        const { token, updatedUser} = await login(email, password);
 
         res.status(200).json({
             token,
             user: {
                 email,
-                subscription: user.subscription,
+                subscription: updatedUser.subscription,
             }
         })
     } catch (err) {

@@ -16,8 +16,6 @@ const authMiddleware = async (req, res, next) => {
     try {
         const user = jwt.decode(token, process.env.JWT_SECRET);
         const checkedUser = await User.findById(user._id);
-        console.log(token);
-        console.log(checkedUser.token);
 
         if (!checkedUser) {
             next(new AuthorizationError("Not authorized"));

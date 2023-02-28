@@ -29,8 +29,7 @@ const login = async (email, password) => {
         throw new AuthorizationError("Email or password is wrong");
     }
 
-    // тут что-то идет не так, пароль пропускает любой сейчас
-    const passwordCheck = bcrypt.compare(password, user.password);
+    const passwordCheck = await bcrypt.compare(password, user.password);
     if (!passwordCheck) {
         throw new AuthorizationError("Email or password is wrong");
     }
@@ -39,7 +38,13 @@ const login = async (email, password) => {
         _id: user._id
     }, process.env.JWT_SECRET);
 
-    return { token, userId: user._id };
+    const updatedUser = await User.findByIdAndUpdate(
+        user._id,
+        { $set: { token } }
+    )
+
+    const result = { token, updatedUser };
+    return result;
 }
 
 const checkCurrentUser = async (userId) => {
