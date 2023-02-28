@@ -1,7 +1,8 @@
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
+const Joi = require('joi');
 
-const { AuthorizationError } = require('../helpers/errors');
+const { AuthorizationError, ValidationError } = require('../helpers/errors');
 const { User } = require('../db/usersModel');
 
 
@@ -32,7 +33,21 @@ const authMiddleware = async (req, res, next) => {
     }
 }
 
+const credentialsCheckMiddleware = async (req, res, next) => {
+    const schema = Joi.object({
+        email: Joi.string().email().required(),
+        password: Joi.string().required()
+    });
+
+    try {
+        await schema.validateAsync(req.body);
+        next();
+    } catch (err) {
+        next(new ValidationError(err.details[0].message));
+    }
+}
 
 module.exports = {
-    authMiddleware
+    authMiddleware,
+    credentialsCheckMiddleware
 }
