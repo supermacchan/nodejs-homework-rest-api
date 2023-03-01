@@ -4,9 +4,9 @@ const {
  } = require('../helpers/errors');
 
 const getContacts = async (owner, {skip, limit, favorite}) => {
-    let query = {owner};
+    const query = {owner};
     if (favorite) {
-        query =  { owner, favorite };
+        query.favorite = favorite;
     }
 
     const contacts = await 
