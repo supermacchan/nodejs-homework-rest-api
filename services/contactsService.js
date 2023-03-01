@@ -3,10 +3,10 @@ const {
     NotFoundError
  } = require('../helpers/errors');
 
-const getContacts = async (owner, {skip, limit, favorite}) => {
-    const query = {owner};
-    if (favorite) {
-        query.favorite = favorite;
+const getContacts = async (owner, {skip, limit, filter}) => {
+    let query = {owner};
+    if (Object.keys(filter).length > 0) {
+        query = {owner, ...filter}
     }
 
     const contacts = await 

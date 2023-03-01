@@ -14,12 +14,28 @@ const getContactsController = async (req, res) => {
         let {
             page = 1,
             limit = 5,
-            favorite = null
+            favorite = null,
+            name = null,
+            email = null,
         } = req.query;
         limit = limit > 20 ? 20 : limit;
         const skip = (page - 1) * limit;
-        
-        const contacts = await getContacts(userId, {skip, limit, favorite});
+
+        const filter = {};
+
+        if (favorite) {
+            filter.favorite = favorite;
+        }
+
+        if (name) {
+            filter.name = name;
+        }
+
+        if (email) {
+            filter.email = email;
+        }
+
+        const contacts = await getContacts(userId, {skip, limit, filter});
         res.status(200).json({contacts});
     } catch (err) {
         res.status(400).json(err.message);
