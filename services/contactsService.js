@@ -1,49 +1,75 @@
 const { Contact } = require('../db/contactsModel');
+const { 
+    NotFoundError
+ } = require('../helpers/errors');
 
-const getContacts = async () => {
-    const contacts = await Contact.find({});
+const getContacts = async (owner, {skip, limit, filter}) => {
+    let query = {owner};
+    if (Object.keys(filter).length > 0) {
+        query = {owner, ...filter}
+    }
+
+    const contacts = await 
+        Contact
+            .find(query)
+            .select({__v: 0})
+            .skip(skip)
+            .limit(limit);
     return contacts;
 };
 
-const getContactById = async (contactId) => {
-    const contact = await Contact.findById(contactId);
+const getContactById = async (contactId, owner) => {
+    const contact = await 
+        Contact
+            .findOne({_id: contactId, owner})
+            .select({__v: 0});
+    if (!contact) {
+        throw new NotFoundError('Not found');
+    }
     return contact;
 };
 
-const addContact = async ({name, email, phone}) => {
-    const contact = new Contact({name, email, phone});
+const addContact = async ({name, email, phone}, owner) => {
+    const contact = new Contact({name, email, phone, owner});
     await contact.save();
     return contact;
 };
 
-const updateContact = async (contactId, {name, email, phone}) => {
-    const contact = await Contact.findByIdAndUpdate(
-        contactId,
-        {$set: {name, email, phone}}
-    )
+const updateContact = async (contactId, {name, email, phone}, owner) => {
+    const contact = await Contact.findOneAndUpdate(
+        {_id: contactId, owner},
+        {$set: {name, email, phone}},
+        {
+            returnDocument: 'after',
+            returnNewDocument: true
+        })
+        .select({__v: 0});
 
     if (!contact) {
-      return null; 
+        throw new NotFoundError('Not found');
     }
-    const newContact = await Contact.findById(contactId);
-    return newContact;
-};
 
-const removeContact = async (contactId) => {
-    const contact = await Contact.findByIdAndRemove(contactId);
     return contact;
 };
 
-const updateStatusContact = async (contactId, {favorite}) => {
-    const contact = await Contact.findByIdAndUpdate(
-        contactId,
+const removeContact = async (contactId, owner) => {
+    const contact = await Contact.findOneAndRemove({_id: contactId, owner});
+    if (!contact) {
+        throw new NotFoundError('Not found');
+    }
+    return contact;
+};
+
+const updateStatusContact = async (contactId, {favorite}, owner) => {
+    const contact = await Contact.findOneAndUpdate(
+        {_id: contactId, owner},
         {$set: {favorite}}
     )
 
     if (!contact) {
-      return null; 
+        throw new NotFoundError('Not found');
     }
-    const newContact = await Contact.findById(contactId);
+    const newContact = await Contact.findById(contactId).select({__v: 0});
     return newContact;
 };
 
