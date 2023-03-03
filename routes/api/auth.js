@@ -3,16 +3,6 @@ const router = express.Router()
 const multer  = require('multer')
 const path = require('path')
 
-// const storage = multer.diskStorage({
-//     destination: (req, file, cb) => {
-//         cb(null, path.resolve('./public/avatars'));
-//     },
-//     filename: (req, file, cb) => {
-//         const [fileName, extension] =  file.originalname.split('.');
-//         cb(null, `${fileName}.${extension}`);
-//     }
-// })
-
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, path.resolve('./tmp'));
@@ -23,8 +13,7 @@ const storage = multer.diskStorage({
     }
 })
 
-const initialUploadMiddleware = multer({storage});
-// const uploadMiddleware = multer({storage});
+const uploadMiddleware = multer({storage});
 
 const { 
     authMiddleware,
@@ -46,10 +35,14 @@ router.post('/signup', credentialsCheckMiddleware, registrationController);
 router.post('/login', credentialsCheckMiddleware, loginController);
 router.get('/current', authMiddleware, checkCurrentUserController);
 router.get('/logout', authMiddleware, logoutController);
-router.patch('/', authMiddleware, subscriptionCheckMiddleware, updateSubscriptionController);
+router.patch('/', 
+    authMiddleware, 
+    subscriptionCheckMiddleware, 
+    updateSubscriptionController
+);
 router.patch('/avatars', 
     authMiddleware, 
-    initialUploadMiddleware.single('avatar'), 
+    uploadMiddleware.single('avatar'), 
     avatarUploadController
 );
  

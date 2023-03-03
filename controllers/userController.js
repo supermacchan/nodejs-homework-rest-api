@@ -28,7 +28,6 @@ const avatarUploadController = async (req, res) => {
 
         res.status(200).json({avatarURL: updatedUser.avatarURL});
     } catch (err) {
-        console.log(err);
         res.status(err.status).json(err.message);
     }
 }

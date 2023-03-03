@@ -7,6 +7,7 @@ const imageResizingMiddleware = async (filePath, extension) => {
     const savingPath = './public';
     const savingFolder = '/avatars/';
     const newFileLocation = `${savingFolder}${newFileName}.${extension}`;
+
     try {
         const image = await Jimp.read(filePath);
         image
