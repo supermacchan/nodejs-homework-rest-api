@@ -22,7 +22,7 @@ const avatarUploadController = async (req, res) => {
         const filePath = `./tmp/${fileName}.${extension}`;
 
         await imageResizingMiddleware(filePath, extension);
-
+// Полученный URL /avatars/<имя файла с расширением> сохрани в поле avatarURL пользователя
         res.status(200).json({status: 'success'});
     } catch (err) {
         console.log(err);
