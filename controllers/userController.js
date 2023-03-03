@@ -13,6 +13,16 @@ const updateSubscriptionController = async (req, res) => {
     }
 }
 
+const avatarUploadController = async (req, res) => {
+    try {
+        res.status(200).json({status: 'success'});
+    } catch (err) {
+        console.log(err);
+        res.status(err.status).json(err.message);
+    }
+}
+
 module.exports = {
-    updateSubscriptionController
+    updateSubscriptionController,
+    avatarUploadController
 }

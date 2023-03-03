@@ -55,12 +55,8 @@ module.exports = router
 
 
 // POSTMAN
-// /api/users/avatars POST
+// /api/users/avatars PATCH
 // body > form-data
 // KEY: avatar (change type to file)
 // VALUE: choose file
 
-// !!!!!
-// https://devstudioonline.com/article/combine-multiple-routers-in-single-route-in-express-node
-// сделать отдельный роутер для юзера? вынести туда аватар и подписку
-// сделать комбинированый роутер для юзера + авторизации, повесить его на маршрут юзерс в апп
