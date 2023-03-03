@@ -17,7 +17,7 @@ const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, path.resolve('./tmp'));
     },
-    filename: (req, file, cb) => {
+    filename: async (req, file, cb) => {
         const [fileName, extension] =  file.originalname.split('.');
         cb(null, `${fileName}.${extension}`);
     }

@@ -1,4 +1,7 @@
 const { updateSubscription } = require('../services/userService');
+const { imageResizingMiddleware } = require('../middleware/imageResizingMiddleware')
+// вынести в сервис?
+
 
 const updateSubscriptionController = async (req, res) => {
     try {
@@ -15,6 +18,11 @@ const updateSubscriptionController = async (req, res) => {
 
 const avatarUploadController = async (req, res) => {
     try {
+        const [fileName, extension] =  req.file.filename.split('.');
+        const filePath = `./tmp/${fileName}.${extension}`;
+
+        await imageResizingMiddleware(filePath, extension);
+
         res.status(200).json({status: 'success'});
     } catch (err) {
         console.log(err);
