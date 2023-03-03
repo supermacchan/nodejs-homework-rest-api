@@ -4,22 +4,23 @@ const fs = require('fs').promises;
 
 const imageResizingMiddleware = async (filePath, extension) => {
     const newFileName = uuid();
-    const savingPath = './public/avatars/';
+    const savingPath = './public';
+    const savingFolder = '/avatars/';
+    const newFileLocation = `${savingFolder}${newFileName}.${extension}`;
     try {
         const image = await Jimp.read(filePath);
-        const resizedImage = image
-                .resize(250, 250)
-                .write(
-                    `${savingPath}${newFileName}.${extension}`,
-                    () => {
-                        fs.unlink(filePath, (err) => {
-                            if (err) {
-                              console.error(err);
-                              throw new Error(err);
-                            }})
-                    }
-                );
-        return resizedImage;
+        image
+            .resize(250, 250)
+            .write(
+                `${savingPath}${newFileLocation}`,
+                () => {
+                    fs.unlink(filePath, (err) => {
+                        if (err) {
+                            throw new Error(err);
+                        }})
+                }
+            );
+        return newFileLocation;
     } catch (err) {
         console.error(err);
     }
