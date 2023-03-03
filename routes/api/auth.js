@@ -13,7 +13,7 @@ const path = require('path')
 //     }
 // })
 
-const upload = multer.diskStorage({
+const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, path.resolve('./tmp'));
     },
@@ -23,7 +23,7 @@ const upload = multer.diskStorage({
     }
 })
 
-const initialUploadMiddleware = multer({upload});
+const initialUploadMiddleware = multer({storage});
 // const uploadMiddleware = multer({storage});
 
 const { 
@@ -47,7 +47,11 @@ router.post('/login', credentialsCheckMiddleware, loginController);
 router.get('/current', authMiddleware, checkCurrentUserController);
 router.get('/logout', authMiddleware, logoutController);
 router.patch('/', authMiddleware, subscriptionCheckMiddleware, updateSubscriptionController);
-router.patch('/avatars', authMiddleware, initialUploadMiddleware.single('avatar'), avatarUploadController);
+router.patch('/avatars', 
+    authMiddleware, 
+    initialUploadMiddleware.single('avatar'), 
+    avatarUploadController
+);
  
 
 module.exports = { authRouter: router };
