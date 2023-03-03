@@ -23,7 +23,7 @@ const avatarUploadController = async (req, res) => {
         const [fileName, extension] =  req.file.filename.split('.');
         const filePath = `./tmp/${fileName}.${extension}`;
 
-        const newFileLocation = await imageResizingMiddleware(filePath, extension);
+        const newFileLocation = await imageResizingMiddleware(filePath, extension, userId);
         const updatedUser = await updateAvatar(userId, newFileLocation);
 
         res.status(200).json({avatarURL: updatedUser.avatarURL});
