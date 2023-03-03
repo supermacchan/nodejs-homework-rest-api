@@ -1,4 +1,5 @@
 const bcrypt = require('bcrypt');
+const gravatar = require('gravatar');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
@@ -18,7 +19,8 @@ const register = async (email, password) => {
 
     const user = new User({
         email,
-        password
+        password,
+        avatarURL: gravatar.url(email)
     });
     await user.save();
 }
