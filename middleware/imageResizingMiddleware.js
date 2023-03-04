@@ -1,10 +1,12 @@
-const Jimp = require("jimp")
+const Jimp = require("jimp");
+const { v4: uuid } = require('uuid');
 const fs = require('fs').promises;
 
 const imageResizingMiddleware = async (filePath, extension, userId) => {
     const savingPath = './public';
     const savingFolder = '/avatars/';
-    const newFileLocation = `${savingFolder}${userId}.${extension}`;
+    const imageID = uuid();
+    const newFileLocation = `${savingFolder}${userId}-${imageID}.${extension}`;
 
     try {
         const image = await Jimp.read(filePath);
