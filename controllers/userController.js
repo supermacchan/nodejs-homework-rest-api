@@ -1,4 +1,8 @@
-const { updateSubscription } = require('../services/userService');
+const { 
+    updateSubscription,
+    updateAvatar
+ } = require('../services/userService');
+const { imageResizingMiddleware } = require('../middleware/imageResizingMiddleware');
 
 const updateSubscriptionController = async (req, res) => {
     try {
@@ -13,6 +17,22 @@ const updateSubscriptionController = async (req, res) => {
     }
 }
 
+const avatarUploadController = async (req, res) => {
+    try {
+        const { _id: userId } = req.user;
+        const [fileName, extension] =  req.file.filename.split('.');
+        const filePath = `./tmp/${fileName}.${extension}`;
+
+        const newFileLocation = await imageResizingMiddleware(filePath, extension, userId);
+        const updatedUser = await updateAvatar(userId, newFileLocation);
+
+        res.status(200).json({avatarURL: updatedUser.avatarURL});
+    } catch (err) {
+        res.status(err.status).json(err.message);
+    }
+}
+
 module.exports = {
-    updateSubscriptionController
+    updateSubscriptionController,
+    avatarUploadController
 }
