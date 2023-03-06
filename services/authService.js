@@ -62,6 +62,10 @@ const login = async (email, password) => {
         throw new AuthorizationError("Email or password is wrong");
     }
 
+    if (!user.verify) {
+        throw new AuthorizationError("Email not verified");
+    }
+
     const token = jwt.sign({
         _id: user._id
     }, process.env.JWT_SECRET);
