@@ -1,12 +1,17 @@
 const bcrypt = require('bcrypt');
 const gravatar = require('gravatar');
+const { v4: uuid } = require('uuid');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
+
+const sgMail = require('@sendgrid/mail')
+sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 
 const { User } = require('../db/usersModel');
 const { 
     RegistrationConflictError,
-    AuthorizationError
+    AuthorizationError,
+    NotFoundError
  } = require('../helpers/errors');
 
 
@@ -17,12 +22,30 @@ const register = async (email, password) => {
         throw new RegistrationConflictError("Email in use");
     }
 
+    const verificationToken = uuid();
+
     const user = new User({
         email,
         password,
-        avatarURL: gravatar.url(email)
+        avatarURL: gravatar.url(email),
+        verificationToken
     });
     await user.save();
+
+    const msg = {
+        to: email,
+        from: process.env.SENDER_EMAIL, 
+        subject: 'Registration confirmed',
+        text: 'Registration success',
+        html: '<strong>Thank u!</strong>',
+    }
+
+    try {
+        await sgMail.send(msg);
+    } catch(err) {
+        console.log(err);
+    }
+    
 }
 
 const login = async (email, password) => {
@@ -71,9 +94,26 @@ const logout = async (userId) => {
     return user;
 }
 
+const verification = async (verificationToken) => {
+    const user = await User.findOneAndUpdate(
+        {verificationToken},
+        { $set: { 
+            verificationToken: null,
+            verify: true
+        }}
+    );
+
+    if (!user) {
+        throw new NotFoundError("User not found");
+    }
+
+    return user;
+}
+
 module.exports = {
     register,
     login,
     checkCurrentUser,
-    logout
+    logout,
+    verification
 }

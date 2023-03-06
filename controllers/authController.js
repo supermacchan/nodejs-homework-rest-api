@@ -2,7 +2,8 @@ const {
     register,
     login,
     checkCurrentUser,
-    logout
+    logout,
+    verification
 } = require('../services/authService');
 
 const registrationController = async (req, res) => {
@@ -16,6 +17,7 @@ const registrationController = async (req, res) => {
             }
         })
     } catch (err) {
+        console.log(err);
         res.status(err.status).json(err.message);
     }
 }
@@ -62,9 +64,20 @@ const checkCurrentUserController = async (req, res) => {
     }
 }
 
+const verificationController = async (req, res) => {
+    const { verificationToken } = req.params;
+    try {
+        await verification(verificationToken);
+        res.status(200).json("Verification successful");
+    } catch (err) {
+        res.status(err.status).json(err.message);
+    }
+}
+
 module.exports = {
     registrationController,
     loginController,
     logoutController,
     checkCurrentUserController,
+    verificationController
 }
