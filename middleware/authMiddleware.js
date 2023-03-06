@@ -47,7 +47,21 @@ const credentialsCheckMiddleware = async (req, res, next) => {
     }
 }
 
+const verifyEmailCheckMiddleware = async (req, res, next) => {
+    const schema = Joi.object({
+        email: Joi.string().email().required()
+    });
+
+    try {
+        await schema.validateAsync(req.body);
+        next();
+    } catch (err) {
+        next(new ValidationError(err.details[0].message));
+    }
+}
+
 module.exports = {
     authMiddleware,
-    credentialsCheckMiddleware
+    credentialsCheckMiddleware,
+    verifyEmailCheckMiddleware
 }

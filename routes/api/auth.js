@@ -17,7 +17,8 @@ const uploadMiddleware = multer({storage});
 
 const { 
     authMiddleware,
-    credentialsCheckMiddleware
+    credentialsCheckMiddleware,
+    verifyEmailCheckMiddleware
  } = require('../../middleware/authMiddleware');
 const { subscriptionCheckMiddleware } = require('../../middleware/userMiddleware');
 const {
@@ -25,6 +26,8 @@ const {
     loginController,
     logoutController,
     checkCurrentUserController,
+    verificationController,
+    resendVerificationController
 } = require('../../controllers/authController');
 const { 
     updateSubscriptionController, 
@@ -45,6 +48,8 @@ router.patch('/avatars',
     uploadMiddleware.single('avatar'), 
     avatarUploadController
 );
+router.get('/verify/:verificationToken', verificationController);
+router.post('/verify', verifyEmailCheckMiddleware, resendVerificationController);
  
 
 module.exports = { authRouter: router };
