@@ -35,9 +35,12 @@ const register = async (email, password) => {
     const msg = {
         to: email,
         from: process.env.SENDER_EMAIL, 
-        subject: 'Registration confirmed',
-        text: 'Registration success',
-        html: '<strong>Thank u!</strong>',
+        subject: 'Please verify your email',
+        html: `<strong>Thank you for signing up!</strong>
+        </br>
+        <p>Please verify your email address to complete the registration. Follow the link below:</p>
+        </br>
+        <a href='http://localhost:3000/api/users/verify/${verificationToken}'>Verify email</a>`,
     }
 
     try {
