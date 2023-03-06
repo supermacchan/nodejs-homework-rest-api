@@ -11,7 +11,8 @@ const { User } = require('../db/usersModel');
 const { 
     RegistrationConflictError,
     AuthorizationError,
-    NotFoundError
+    NotFoundError,
+    ValidationError
  } = require('../helpers/errors');
 
 
@@ -46,7 +47,7 @@ const register = async (email, password) => {
     try {
         await sgMail.send(msg);
     } catch(err) {
-        console.log(err);
+        throw new Error(err);
     }
     
 }
@@ -117,10 +118,41 @@ const verification = async (verificationToken) => {
     return user;
 }
 
+const resendVerification = async (email) => {
+    const user = await User.findOne({email});
+    if (!user) {
+        throw new NotFoundError("User not found");
+    }
+
+    if (user.verify) {
+        throw new ValidationError("Verification has already been passed");
+    }
+
+    const msg = {
+        to: email,
+        from: process.env.SENDER_EMAIL, 
+        subject: 'Please verify your email',
+        html: `<strong>Thank you for signing up!</strong>
+        </br>
+        <p>Please verify your email address to complete the registration. Follow the link below:</p>
+        </br>
+        <a href='http://localhost:3000/api/users/verify/${user.verificationToken}'>Verify email</a>`,
+    }
+
+    try {
+        await sgMail.send(msg);
+    } catch(err) {
+        throw new Error(err);
+    }
+
+    return user;
+}
+
 module.exports = {
     register,
     login,
     checkCurrentUser,
     logout,
-    verification
+    verification,
+    resendVerification
 }

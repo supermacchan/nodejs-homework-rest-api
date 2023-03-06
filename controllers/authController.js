@@ -3,7 +3,8 @@ const {
     login,
     checkCurrentUser,
     logout,
-    verification
+    verification,
+    resendVerification
 } = require('../services/authService');
 
 const registrationController = async (req, res) => {
@@ -74,10 +75,22 @@ const verificationController = async (req, res) => {
     }
 }
 
+const resendVerificationController = async (req, res) => {
+    try {
+        const { email } = req.body;
+    
+        await resendVerification(email);
+        res.status(200).json("Verification email sent");
+    } catch (err) {
+        res.status(err.status).json(err.message);
+    }
+}
+
 module.exports = {
     registrationController,
     loginController,
     logoutController,
     checkCurrentUserController,
-    verificationController
+    verificationController,
+    resendVerificationController
 }
